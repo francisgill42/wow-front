@@ -106,8 +106,7 @@
 export default{
   data(){
     return {
-      user_count:'',
-      role_count:'',
+     
     }
   },
 created () {
@@ -120,12 +119,6 @@ created () {
    methods: {
 
       async initialize () {
-
-          const roles = await this.$axios.get('role');
-         
-          const users = await this.$axios.get('user');
-          this.user_count = users.data.length;
-          this.role_count = roles.data.length;
 
       },
    }

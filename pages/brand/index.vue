@@ -75,7 +75,6 @@
                   <v-row>
                   <v-col>
                   <v-select
-
                   :rules="Rules"
                   v-model="editedItem.category_ids" 
                   :items="cat_to_upload"

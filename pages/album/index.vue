@@ -148,6 +148,13 @@
       <v-icon
         small
         class="mr-2"
+        @click="addProduct(item)"
+      > 
+      mdi-content-save
+      </v-icon>
+       <v-icon
+        small
+        class="mr-2"
         @click="editItem(item)"
       >
         mdi-pencil
@@ -265,6 +272,10 @@
     },
 
     methods: {
+
+      addProduct (item) {
+         this.$router.push('album/' + item.id);
+      },
 
       get_data () {
             this.$axios.get('get_data_for_albums/'+this.editedItem.category_id)

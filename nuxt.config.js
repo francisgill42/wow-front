@@ -45,7 +45,7 @@ module.exports = {
 ],
 axios: {
 //    baseURL: 'https://orangeroomdigital.com/mnp/public/api'
-      baseURL: 'http://localhost:8000/api' 
+      baseURL: 'http://localhost/pro/wow/public/api' 
 },
 
 auth: {
