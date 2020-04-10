@@ -144,7 +144,18 @@
         </v-dialog>
       </v-toolbar>
     </template>
-    <template v-slot:item.action="{ item }">
+    <template v-slot:item.product="{ item }">
+      <v-icon
+        small
+         @click="product_by_album(item)"
+      >
+        mdi-eye
+      </v-icon>
+    </template>
+
+
+
+        <template v-slot:item.action="{ item }">
       <v-icon
         small
         class="mr-2"
@@ -216,6 +227,12 @@
           sortable: false,
           value: 'sub_category_name',
         },
+          {
+          text: 'Products',
+          align: 'left',
+          sortable: false,
+          value: 'product',
+        },
         { text: 'Actions', value: 'action', sortable: false },
       ],
       editedIndex: -1,
@@ -264,14 +281,19 @@
 
     async created () {
      const data = await this.$axios.get('albums');
-
      this.albums = data.data.albums
+
+
 
      this.cat_to_upload = data.data.categories;
             
     },
 
     methods: {
+
+      product_by_album (item) {
+         this.$router.push('album/product/' + item.id);
+      },
 
       addProduct (item) {
          this.$router.push('album/' + item.id);

@@ -255,7 +255,7 @@
               this.close()
               }
             })
-            .catch(error => console.log(err));
+            .catch(err => console.log(err));
            }
            else{
 

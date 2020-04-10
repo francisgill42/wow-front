@@ -20,7 +20,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#4E342E' },
   /*
   ** Global CSS
   */
@@ -44,8 +44,8 @@ module.exports = {
   '@nuxtjs/auth'
 ],
 axios: {
-//    baseURL: 'https://orangeroomdigital.com/mnp/public/api'
-      baseURL: 'http://localhost/pro/wow/public/api' 
+     baseURL: 'https://sub.webndesign.website/api',
+      // baseURL: 'http://localhost/pro/wow/public/api' 
 },
 
 auth: {
@@ -76,10 +76,10 @@ router: {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: false,
+      dark: true,
       themes: {
         light: {
-          primary: '#F1D600',
+          primary: '#4E342E',
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,

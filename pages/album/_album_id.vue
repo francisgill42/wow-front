@@ -19,7 +19,7 @@ Close
 
 
 <v-toolbar flat dark>
-<v-toolbar-title class="headline">Create</v-toolbar-title>
+<v-toolbar-title class="headline">Create testing</v-toolbar-title>
 <v-spacer></v-spacer>
 <v-btn
 color="primary"
@@ -33,12 +33,14 @@ Submit
 <v-card-text>
 <v-form ref="form" lazy-validation>
 
-<v-container v-for="(loop,index) in i" :key="index">
+<!-- v-for="(loop,index) in i" :key="index" -->
+<v-container>
 <v-row>
 <v-col>
 <strong>
 <v-alert class="primary">
-Product {{loop}}
+Product 
+
 </v-alert>
 </strong>
 </v-col>
@@ -48,20 +50,20 @@ Product {{loop}}
 <v-col>
 
 
-<v-text-field :rules="Rules" v-model="item.product_title[index]" label="Product Title"></v-text-field>
+<v-text-field :rules="Rules" v-model="item.product_title" label="Product Title"></v-text-field>
 </v-col>
 <v-col>
-<v-text-field :rules="Rules" v-model="item.product_code[index]" label="Product CODE"></v-text-field>
+<v-text-field :rules="Rules" v-model="item.product_code" label="Product CODE"></v-text-field>
 </v-col>
 </v-row>
 
 <v-row>
 <v-col>
-<v-text-field :rules="Rules"  v-model="item.product_price[index]" label="Product Price"></v-text-field>
+<v-text-field type="number" :rules="Rules"  v-model="item.product_price" label="Product Price"></v-text-field>
 </v-col>
 <v-col>
 <v-select
-v-model="item.color_id[index]" 
+v-model="item.color_id" 
 :items="colors"
 item-value="id"
 item-text="color" 
@@ -81,7 +83,7 @@ label="Color"
       clearable
       @change="check_attachment"
     >
-      <template v-slot:selection="{ text, inner_index, file }">
+      <!-- <template v-slot:selection="{ text, inner_index, file }">
         <v-chip
           small
           text-color="black"
@@ -89,14 +91,14 @@ label="Color"
           >
           {{ text }}
         </v-chip>
-      </template>
+      </template> -->
     </v-file-input>
 </v-row>
 
 
 <v-row>
 <v-col>
-<v-textarea  v-model="item.product_description[index]" label="Production Description"></v-textarea>
+<v-textarea  v-model="item.product_description" label="Production Description"></v-textarea>
 </v-col>
 </v-row>
 
@@ -104,12 +106,12 @@ label="Color"
 
 
 </v-container>
-<v-container><v-row>
+<v-container>
+<!-- <v-row>
 <v-col>
 <v-btn class="primary black--text" @click="i++">Add More <v-icon>mdi-plus</v-icon></v-btn>
 </v-col>
-
-</v-row>
+</v-row> -->
 </v-container>
 
 </v-form>
@@ -145,12 +147,13 @@ mdi-delete
 
 export default {
 async created () {
-//console.log(this.$route.params.album_id);
+this.collection_id = this.$route.params.album_id
 //  const categories = await this.$axios.get('users');
 //  this.categories = categories.data;
 
 },
 data:() => ({
+collection_id : '',
 i:1,  
 categories:[],
 item : {
@@ -162,13 +165,11 @@ product_price:[],
 product_image:[],
 product_description:[],
 },
-product_image:{
-  name:''
-},
+arr:[],
 colors:[
-{id:1,color_code:'#ff0000',color:'red'},
-{id:2,color_code:'#00ff00',color:'green'},
-{id:3,color_code:'#0000FF',color:'blue'},
+{id:'red',color_code:'#ff0000',color:'red'},
+{id:'green',color_code:'#00ff00',color:'green'},
+{id:'blue',color_code:'#0000FF',color:'blue'},
 
 ],
 
@@ -192,41 +193,56 @@ watch: {
 methods:{
 
 check_attachment(e) { 
+  if(!e.length){
+    return false;
+  }
+    for( var i = 0; i < e.length; i++ ){
+          this.item.product_image.push( e[i] ); 
+    }
 
-this.item.product_image[this.i - 1] = e || ''; 
 
 },
 
 save(e){
 
-let product = new FormData();
+
+const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+
+
+let index = this.i - 1;
+let product = new FormData();  
+
+
+product.append('collection_id',this.collection_id);
 product.append('color_id',this.item.color_id);
 product.append('product_code',this.item.product_code);
 product.append('product_title',this.item.product_title); 
 product.append('product_price',this.item.product_price);
-product.append('product_image',this.item.product_image);
 product.append('product_description',this.item.product_description);
-// if(this.$refs.form.validate()){
 
-// this.$axios.post('product',product).then((res) => {
+  for(var j = 0; j < this.item.product_image.length; j++){
+     product.append('product_images['+j+']', this.item.product_image[j]);  
+  }  
 
-//     this.snackbar = res.data.response_status;
+if(this.$refs.form.validate()){
 
-//     if(res.data.response_status){
+  this.$axios.post('product',product,config).then((res) => {
+    this.snackbar = res.data.response_status;
 
-//         this.msg = res.data.message;
-//         setTimeout(() => {
-//             this.$router.push('/product');
-//         },1000);
-//     }
-//     else{
-//         this.errors = res.data.errors;
-//     }
+    if(res.data.response_status){
+
+        this.msg = res.data.message;
+        setTimeout(() => {
+            this.$router.push('product/'+this.collection_id);
+        },1000);
+    }
+    else{
+        this.errors = res.data.errors;
+    }
 
 
-// });
-
-// }
+});
+}
 
 },
 

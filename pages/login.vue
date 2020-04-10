@@ -70,8 +70,8 @@ layout:'login',
 data:() => ({
 loading:false,    
 snackbar:false,    
-email:'master@erp.com',
-password:'secret',          
+email:'',
+password:'',          
 msg:''
 }),
 methods:{
