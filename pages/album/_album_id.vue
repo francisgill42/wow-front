@@ -19,7 +19,7 @@ Close
 
 
 <v-toolbar flat dark>
-<v-toolbar-title class="headline">Create testing</v-toolbar-title>
+<v-toolbar-title class="headline">Create</v-toolbar-title>
 <v-spacer></v-spacer>
 <v-btn
 color="primary"
@@ -213,12 +213,14 @@ let index = this.i - 1;
 let product = new FormData();  
 
 
+let auto_fill = false;
+
 product.append('collection_id',this.collection_id);
-product.append('color_id',this.item.color_id);
-product.append('product_code',this.item.product_code);
-product.append('product_title',this.item.product_title); 
-product.append('product_price',this.item.product_price);
-product.append('product_description',this.item.product_description);
+product.append('color_id',!auto_fill ?  this.item.color_id : 'red');
+product.append('product_code',!auto_fill ? this.item.product_code : '789');
+product.append('product_title',!auto_fill ? this.item.product_title : 'abc'); 
+product.append('product_price',!auto_fill ? this.item.product_price : 500);
+product.append('product_description',!auto_fill ? this.item.product_description : 'test');
 
   for(var j = 0; j < this.item.product_image.length; j++){
      product.append('product_images['+j+']', this.item.product_image[j]);  
@@ -226,22 +228,14 @@ product.append('product_description',this.item.product_description);
 
 if(this.$refs.form.validate()){
 
-  this.$axios.post('product',product,config).then((res) => {
-    this.snackbar = res.data.response_status;
-
-    if(res.data.response_status){
-
-        this.msg = res.data.message;
+  this.$axios.post('product',product,config).then((res,status) => {
+        console.log(res.data,status);
+        
         setTimeout(() => {
             this.$router.push('product/'+this.collection_id);
         },1000);
-    }
-    else{
-        this.errors = res.data.errors;
-    }
-
-
-});
+    
+}).catch(() => this.errors = res.data.errors);
 }
 
 },

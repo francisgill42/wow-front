@@ -220,11 +220,23 @@ label="Color"
   sortable: false,
   value: 'product_title',
   },
+    {
+  text: 'Product Code',
+  align: 'left',
+  sortable: false,
+  value: 'product_code',
+  },
   {
   text: 'Product Price',
   align: 'left',
   sortable: false,
   value: 'product_price',
+  },
+    {
+  text: 'Product Description',
+  align: 'left',
+  sortable: false,
+  value: 'product_description',
   },
   {
   text: 'Image',
