@@ -21,6 +21,10 @@
     :search="search"
     class="elevation-1"
   >
+  <template  v-slot:item.brand_image="{ item }">
+<br>
+<img  height="50" width="50" :src="item.brand_image" alt="Orange Room Digital"/>
+</template>
   <template  v-slot:item.categories="{ item }">
   <v-col style="margin-left:-15px !important;" sm="6">
   <v-chip
@@ -88,6 +92,30 @@
                   
                   </v-col>
                   </v-row>
+                 <v-row>
+                
+                  <v-col cols="12">
+                  <v-btn 
+                  class="primary mt-2 black--text" 
+                  @click="image_attachment">
+                  {{(!brand_image.name) ? 'Collection Image' : brand_image.name}}
+                  <v-icon right dark>
+                    mdi-cloud-upload
+                  </v-icon>
+                  </v-btn>   
+                  <v-img v-if="formTitle != 'New Item' " :src="image_holder" height="210" class="mt-2" width="210"></v-img>
+                  
+                  <input 
+                  required 
+                  type="file" 
+                  @change="check_image_attachment" 
+                  style="display:none;" 
+                  accept="image/*" 
+                  ref="image_attachment_Input">
+                  </v-col>
+                  
+                  </v-row>
+                  
                   
               </v-container>
             </v-card-text>
@@ -130,6 +158,7 @@
       search:'',
       snackbar:false,
       dialog: false,
+      image_holder:'',
       headers: [
         {
           text: '#',
@@ -138,6 +167,12 @@
           value: 'id',
         },
          {
+          text: 'Brand Image',
+          align: 'left',
+          sortable: false,
+          value: 'brand_image',
+        },
+        {
           text: 'Brand',
           align: 'left',
           sortable: false,
@@ -152,10 +187,14 @@
         { text: 'Actions', value: 'action', sortable: false },
       ],
       editedIndex: -1,
+      brand_image:{
+      name:''
+      },
       editedItem: {
         id:'',
         category_ids:[],
         brand_name: '',
+        
        
       },
       defaultItem: {
@@ -192,23 +231,38 @@
       },
     },
 
-    async created () {
+    async created () {      
+
      const data = await this.$axios.get('brands');
-
      this.brands = data.data.brands
-
      this.cat_to_upload = data.data.categories;
             
     },
 
     methods: {
 
+        image_attachment () { 
+        this.$refs.image_attachment_Input.click() 
+        },
+
+        check_image_attachment(e) { 
+
+        this.brand_image = e.target.files[0] || ''; 
+
+        },
+
       editItem (item) {
-          this.editedIndex = this.brands.indexOf(item)
-          this.editedItem.id = item.id
-          this.editedItem.brand_name = item.brand_name 
-         // this.editedItem = Object.assign({}, item)
-          this.dialog = true
+
+            item.category_ids.match(/[0-9]/g)
+                .forEach((v) => {
+                   this.editedItem.category_ids.push(parseInt(v));
+                });
+          
+            this.editedIndex = this.brands.indexOf(item)
+            this.editedItem.id = item.id
+            this.editedItem.brand_name = item.brand_name
+            this.image_holder = item.brand_image
+            this.dialog = true
           
       },
 
@@ -237,15 +291,22 @@
       },
 
       save () {
-        if(this.$refs.form.validate()){
-          const payload = {
-            brand_name: this.editedItem.brand_name,
-            category_ids: this.editedItem.category_ids
-            }
+  
+          const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+          let brand = new FormData();
 
+          brand.append('brand_name',this.editedItem.brand_name);
+          brand.append('brand_image', this.brand_image);  
+          for(var j = 0; j < this.editedItem.category_ids.length; j++){
+          brand.append('category_ids['+j+']', this.editedItem.category_ids[j]);  
+          }  
+
+
+        if(this.$refs.form.validate()){
+          
            if (this.editedIndex > -1) {
 
-            this.$axios.put('brands/' + this.editedItem.id, payload)
+            this.$axios.post('brands/' + this.editedItem.id, brand,config)
             .then(res => {
             if(res.data.response_status){  
               const index = this.brands.findIndex(item => item.id == this.editedItem.id)
@@ -258,10 +319,8 @@
             .catch(err => console.log(err));
            }
            else{
-
-
               
-            this.$axios.post('brands',payload)
+            this.$axios.post('brands',brand,config)
               .then((res) => {
 
               if(res.data.response_status){ 
@@ -269,7 +328,6 @@
               this.brands.push(res.data.new_record)
               this.snackbar = res.data.response_status;
               this.response.msg = res.data.message;
-
               this.close()
               
               }

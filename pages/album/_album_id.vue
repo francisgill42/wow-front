@@ -47,11 +47,11 @@ Product
 
 </v-row>
 <v-row>
+
 <v-col>
-
-
 <v-text-field :rules="Rules" v-model="item.product_title" label="Product Title"></v-text-field>
 </v-col>
+
 <v-col>
 <v-text-field :rules="Rules" v-model="item.product_code" label="Product CODE"></v-text-field>
 </v-col>
@@ -94,14 +94,16 @@ label="Color"
       </template> -->
     </v-file-input>
 </v-row>
-
-
 <v-row>
 <v-col>
 <v-textarea  v-model="item.product_description" label="Production Description"></v-textarea>
 </v-col>
 </v-row>
-
+<v-row>
+<v-col>
+<v-text-field :rules="Rules" v-model="item.product_url" label="Product URL"></v-text-field>
+</v-col>
+</v-row>
 
 
 
@@ -164,6 +166,7 @@ product_title:[],
 product_price:[],
 product_image:[],
 product_description:[],
+product_url:[],
 },
 arr:[],
 colors:[
@@ -221,6 +224,8 @@ product.append('product_code',!auto_fill ? this.item.product_code : '789');
 product.append('product_title',!auto_fill ? this.item.product_title : 'abc'); 
 product.append('product_price',!auto_fill ? this.item.product_price : 500);
 product.append('product_description',!auto_fill ? this.item.product_description : 'test');
+product.append('product_url',!auto_fill ? this.item.product_url : 'test');
+
 
   for(var j = 0; j < this.item.product_image.length; j++){
      product.append('product_images['+j+']', this.item.product_image[j]);  

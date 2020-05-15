@@ -21,9 +21,9 @@
     :search="search"
     class="elevation-1"
   >
-  <template  v-slot:item.album_image="{ item }">
+<template  v-slot:item.album_image="{ item }">
 <br>
-<img  height="50" width="50" :src="item.album_image" alt="Orange Room Digital"/>
+<img  height="50" width="50" :src="item.album_image" alt=""/>
 </template>
  
     <template v-slot:top>

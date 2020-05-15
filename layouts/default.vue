@@ -100,6 +100,11 @@ export default {
           title: 'Album',
           to: '/album'
         },
+         {
+          icon: 'mdi-chart-bubble',
+          title: 'Color',
+          to: '/color'
+        },
         
   
        

@@ -221,6 +221,12 @@ label="Color"
   value: 'product_title',
   },
     {
+  text: 'Product URL',
+  align: 'left',
+  sortable: false,
+  value: 'url',
+  },
+    {
   text: 'Product Code',
   align: 'left',
   sortable: false,
