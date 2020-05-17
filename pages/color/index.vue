@@ -113,10 +113,16 @@
           value: 'id',
         },
          {
-          text: 'Color',
+          text: 'Color Name',
           align: 'left',
           sortable: false,
           value: 'color_name',
+        }, 
+        {
+          text: 'Color Code',
+          align: 'left',
+          sortable: false,
+          value: 'color_code',
         },
         { text: 'Actions', value: 'action', sortable: false },
       ],
