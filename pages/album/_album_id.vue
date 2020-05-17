@@ -25,6 +25,7 @@ Close
 color="primary"
 class=" black--black"
 @click="save"
+:loading="loading"
 >
 Submit
 </v-btn>
@@ -149,12 +150,20 @@ mdi-delete
 
 export default {
 async created () {
-this.collection_id = this.$route.params.album_id
-//  const categories = await this.$axios.get('users');
-//  this.categories = categories.data;
+     this.collection_id = this.$route.params.album_id;
+
+     let colors = await this.$axios.get('colors');
+
+     this.colors = colors.data.map((v) => ({
+        id  : v.id,
+        color  : v.color_name,
+        color_code  : v.color_code
+
+     }));
 
 },
 data:() => ({
+loading:false,  
 collection_id : '',
 i:1,  
 categories:[],
@@ -169,30 +178,19 @@ product_description:[],
 product_url:[],
 },
 arr:[],
-colors:[
-{id:'red',color_code:'#ff0000',color:'red'},
-{id:'green',color_code:'#00ff00',color:'green'},
-{id:'blue',color_code:'#0000FF',color:'blue'},
 
-],
-
-
+colors:[],
 
 msg:"",
 
 snackbar:false,
+
 Rules : [
 v => !!v || 'This field is required',
 ],
 
 }),
-computed:{
 
-
-},
-watch: {
-
-},
 methods:{
 
 check_attachment(e) { 
@@ -219,7 +217,7 @@ let product = new FormData();
 let auto_fill = false;
 
 product.append('collection_id',this.collection_id);
-product.append('color_id',!auto_fill ?  this.item.color_id : 'red');
+product.append('color_id',!auto_fill ?  this.item.color_id : 1);
 product.append('product_code',!auto_fill ? this.item.product_code : '789');
 product.append('product_title',!auto_fill ? this.item.product_title : 'abc'); 
 product.append('product_price',!auto_fill ? this.item.product_price : 500);
@@ -234,10 +232,10 @@ product.append('product_url',!auto_fill ? this.item.product_url : 'test');
 if(this.$refs.form.validate()){
 
   this.$axios.post('product',product,config).then((res,status) => {
-        console.log(res.data,status);
-        
+        this.loading = true;  
         setTimeout(() => {
             this.$router.push('product/'+this.collection_id);
+            this.loading = false;
         },1000);
     
 }).catch(() => this.errors = res.data.errors);

@@ -280,11 +280,9 @@
     },
 
     async created () {
+      
      const data = await this.$axios.get('albums');
      this.albums = data.data.albums
-
-
-
      this.cat_to_upload = data.data.categories;
             
     },

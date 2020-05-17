@@ -58,6 +58,12 @@
                     <v-text-field :rules="Rules" v-model="editedItem.color_name" label="Color Name"></v-text-field>
                   </v-col>
                   </v-row>
+                  
+                  <v-row>  
+                  <v-col>
+                    <v-text-field :rules="Rules" v-model="editedItem.color_code" label="Color Code"></v-text-field>
+                  </v-col>
+                  </v-row>
               </v-container>
             </v-card-text>
 
@@ -117,10 +123,12 @@
       editedIndex: -1,
       editedItem: {
         color_name: '',
+        color_code: '',
        
       },
       defaultItem: {
         color_name: '',
+        color_code: '',
       
       },
       response : {
@@ -193,14 +201,16 @@
            if (this.editedIndex > -1) {
 
             this.$axios.put('colors/' + this.editedItem.id, {
-            color_name: this.editedItem.color_name
+            color_name: this.editedItem.color_name,
+            color_code: this.editedItem.color_code
             })
             .then(res => {
             if(res.data.response_status){ 
             const index = this.colors.findIndex(item => item.id == this.editedItem.id)
             this.colors.splice(index, 1,{
             id:this.editedItem.id,
-            color_name:this.editedItem.color_name
+            color_name:this.editedItem.color_name,
+            color_code: this.editedItem.color_code
             });
               this.snackbar = res.data.response_status;
               this.response.msg = res.data.message;
@@ -211,7 +221,10 @@
            }
            else{
               
-            this.$axios.post('colors',{color_name:this.editedItem.color_name})
+            this.$axios.post('colors',{
+              color_name:this.editedItem.color_name,
+              color_code: this.editedItem.color_code
+              })
               .then((res) => {
 
               if(res.data.response_status){ 
