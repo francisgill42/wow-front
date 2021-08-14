@@ -48,11 +48,11 @@
       </v-btn>
      </span>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <nuxt />
       </v-container>
-    </v-content>
+    </v-main>
    
     <v-footer
       :fixed="fixed"
